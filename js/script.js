@@ -34,54 +34,87 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   })
 
-//timer
-let dedline = '2021-03-14';
-function getTimeRemaining(endtime){
-  let t = Date.parse(endtime) - Date.parse(new Date()), 
-  days = Math.floor(t/(1000 * 60 * 60 * 24)), // мс в 24ч
-  hours = Math.floor((t/(1000 * 60 * 60) % 24)), // мс в ч
-  minutes = Math.floor((t/ 1000/ 60) % 60), //мс в м
-  sec = Math.floor((t / 1000) % 60); //мс в с
+  //timer
+  let dedline = '2021-03-15';
 
-  return {
-    'total': t,
-    'days': days,
-    'hours': hours,
-    'minutes': minutes,
-    'sec': sec
-  };
+  function getTimeRemaining(endtime) {
+    let t = Date.parse(endtime) - Date.parse(new Date()),
+      days = Math.floor(t / (1000 * 60 * 60 * 24)), // мс в 24ч
+      hours = Math.floor((t / (1000 * 60 * 60) % 24)), // мс в ч
+      minutes = Math.floor((t / 1000 / 60) % 60), //мс в м
+      sec = Math.floor((t / 1000) % 60); //мс в с
 
-}
-function getZero(n){
-  if(n >= 0 && n < 10){
-    return `0${n}`;
-  }else{
-    return n;
+    return {
+      'total': t,
+      'days': days,
+      'hours': hours,
+      'minutes': minutes,
+      'sec': sec
+    };
+
   }
-}
-function setClock(sel, endtime){
-  let timer = document.querySelector(sel),
-  days = timer.querySelector('#days'),
-  hours = timer.querySelector('#hours'),
-  minutes = timer.querySelector('#minutes'),
-  sec = timer.querySelector('#seconds'),
-  timerInterval = setInterval(updateClock, 1000);
-  updateClock();
 
-  function updateClock(){
-    let t = getTimeRemaining(endtime);
-    days.innerHTML = getZero(t.days);
-    hours.innerHTML = getZero(t.hours);
-    minutes.innerHTML = getZero(t.minutes);
-    sec.innerHTML = getZero(t.sec);
-
-    if(t.total <= 0 ){
-      clearInterval(timerInterval);
+  function getZero(n) {
+    if (n >= 0 && n < 10) {
+      return `0${n}`;
+    } else {
+      return n;
     }
   }
-}
 
-setClock('.timer', dedline);
+  function setClock(sel, endtime) {
+    let timer = document.querySelector(sel),
+      days = timer.querySelector('#days'),
+      hours = timer.querySelector('#hours'),
+      minutes = timer.querySelector('#minutes'),
+      sec = timer.querySelector('#seconds'),
+      timerInterval = setInterval(updateClock, 1000);
+    updateClock();
+
+    function updateClock() {
+      let t = getTimeRemaining(endtime);
+      days.innerHTML = getZero(t.days);
+      hours.innerHTML = getZero(t.hours);
+      minutes.innerHTML = getZero(t.minutes);
+      sec.innerHTML = getZero(t.sec);
+
+      if (t.total <= 0) {
+        clearInterval(timerInterval);
+      }
+    }
+  }
+
+  setClock('.timer', dedline);
+
+  //modal
+  const modalBtns = document.querySelectorAll('[data-modal]'),
+    modal = document.querySelector('.modal'),
+    modalCloseBtn = document.querySelector('[data-close]');
+
+
+  modalBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      modal.classList.add('show');
+      modal.classList.remove('hide');
+      document.body.style.overflow = 'hidden';
+    });
+  });
+function closeModal(){
+  modal.classList.add('hide');
+  modal.classList.remove('show');
+  document.body.style.overflow = '';
+}
+  modalCloseBtn.addEventListener('click', closeModal);
+  modal.addEventListener('click', (e) => {
+    if(e.target === modal){
+      closeModal();
+    }
+  });
+  document.addEventListener('keydown', (e) => {
+    if(e.code === 'Escape' && modal.classList.contains('show')){
+      closeModal();
+    }
+  })
 
 
 
