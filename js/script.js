@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
   })
 
   //timer
-  let dedline = '2021-03-15';
+  let dedline = '2021-03-17 00:00:00';
 
   function getTimeRemaining(endtime) {
     let t = Date.parse(endtime) - Date.parse(new Date()),
@@ -80,6 +80,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (t.total <= 0) {
         clearInterval(timerInterval);
+        days.innerHTML = '0';
+        hours.innerHTML = '0';
+        minutes.innerHTML = '0';
+        sec.innerHTML = '0';
       }
     }
   }
@@ -119,7 +123,16 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   })
 
-  let modalTimer = setTimeout(openModal, 7000);
+  let modalTimer = setTimeout(openModal, 10000);
 
+  function showModalByScroll() {
+    if (window.pageYOffset + document.documentElement.clientHeight >= document.
+      documentElement.scrollHeight){
+           openModal();
+          window.removeEventListener('scroll', showModalByScroll);
+      }
+   
+  }
+  window.addEventListener('scroll', showModalByScroll);
 
 });
